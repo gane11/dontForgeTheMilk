@@ -324,6 +324,7 @@ input:focus {
   font-size: 13px;
   /* border-top: 3px solid #CCCCCC; */
   /* margin: 0 1%; */
+  height: 100%;
 }
 
 .list-cat-container {
@@ -355,7 +356,7 @@ input:focus {
     "task-total overdue-total completed-total divider tab-container"
     "add-task-form add-task-form add-task-form add-task-form add-task-form"
     "task-list task-list task-list task-list task-list";
-  height: 665px;
+  height: 100%
 }
 
 .mid-col-list-header {
@@ -586,7 +587,7 @@ form.add-task-form{
   grid-template-areas:
     "task-info"
     "task-options";
-  height: 665px;
+  height: 100%;
 }
 
 .right-col__task-info {
