@@ -33,7 +33,7 @@ const authRefresh = (req, res, next) => {
     return res.set("WWW-Authenticate", "Bearer").status(401).end();
   }
 
-  return jwt.verify( token, secret, null, async (error, jwtPayload) => {
+  return jwt.verify(token, secret, null, async (error, jwtPayload) => {
     if (error) {
       error.status = 401;
       return next(error);
@@ -43,7 +43,7 @@ const authRefresh = (req, res, next) => {
 
     try {
       req.user = await User.findByPk(id);
-    } catch(error) {
+    } catch (error) {
       return next(error);
     }
 
@@ -59,15 +59,13 @@ const restoreUser = (req, res, next) => {
 
   const { token } = req;
 
-  if (!token && ( req.path == '/sign-in' || req.path == '/register' ) ) {
+  if (!token && (req.path == '/sign-in' || req.path == '/register')) {
     return next();
   };
 
   if (!token) {
     return res.redirect('/sign-in');
   }
-
-
 
 
 
@@ -101,6 +99,6 @@ const restoreUser = (req, res, next) => {
 
 const authCheck = [bearerToken(), authRefresh]
 
-const userValidation = [bearerToken({ cookie: { signed: true, secret, key: "accessToken"} }), restoreUser]
+const userValidation = [bearerToken({ cookie: { signed: true, secret, key: "accessToken" } }), restoreUser]
 
 module.exports = { getUserToken, authCheck, userValidation };

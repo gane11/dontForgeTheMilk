@@ -47,7 +47,7 @@ const fetchList = async (userId) => {
   //add a list button
   let addListButton = document.getElementById("add-list-button");
   addListButton.addEventListener("click", e => {
-    e.stopPropagation();
+    e.stopImmediatePropagation();
     e.preventDefault();
     const addForm = document.querySelector(".add-list-form-holder");
     addForm.style.display = "block";
@@ -98,27 +98,28 @@ const fetchList = async (userId) => {
       button.addEventListener("click", async e => {
         // handleDelete(button.dataset.deletelistId))
         deleteButtonId = button.dataset.deletelistId;
-      try {
-        const res = await fetch(`/api/lists/${deleteButtonId}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem(
-              "DFTM_USER_TOKEN"
-            )}`,
+        console.log(deleteButtonId)
+        try {
+          const res = await fetch(`/api/lists/${deleteButtonId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(
+                "DFTM_USER_TOKEN"
+              )}`,
+            }
+          });
+          if (!res.ok) {
+            throw res;
           }
-        });
-        if (!res.ok) {
-          throw res;
+          document.querySelector(`[data-list-id="${deleteButtonId}"]`).remove();
+          deleteButtonId = NaN;
+          await fetchList(userId)
+        } catch (err) {
+          console.error(err);
         }
-        document.querySelector(`[data-list-id="${deleteButtonId}"]`).remove();
-        deleteButtonId = NaN;
-        await fetchList(userId)
-      } catch (err) {
-        console.error(err);
-      }
+      });
     });
-  });
-}
+  }
 
 
 
@@ -175,9 +176,9 @@ const fetchList = async (userId) => {
 };
 
 
-document.addEventListener("DOMContentLoaded", async()=> {
+document.addEventListener("DOMContentLoaded", async () => {
 
-  try{
+  try {
     // localStorage.setItem('DFTM_USER_ID', 3)
     let userId = localStorage.getItem('DFTM_USER_ID');
     if (!userId) {
@@ -226,41 +227,42 @@ document.addEventListener("DOMContentLoaded", async()=> {
 
 
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const listName = formData.get("listName")
-        const body = { listName };
-        try {
-          const res = await fetch(`/api/users/${userId}/lists`, {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Beearer ${localStorage.getItem(
-                "DFTM_USER_TOKEN"
-              )}`,
-            },
-          });
-          if (res.status === 401) {
-            window.location.href = "/log-in";
-            return;
-          }
-          if (!res.ok) {
-            throw res;
-          }
-          form.reset();
-          console.log('hello')
-          await fetchList(userId);
-        } catch (err) {
-          handleErrors(err);
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation()
+      const formData = new FormData(form);
+      const listName = formData.get("listName")
+      const body = { listName };
+      try {
+        const res = await fetch(`/api/users/${userId}/lists`, {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Beearer ${localStorage.getItem(
+              "DFTM_USER_TOKEN"
+            )}`,
+          },
+        });
+        if (res.status === 401) {
+          window.location.href = "/log-in";
+          return;
         }
-      });
-      // displays user name on the nav ========================================
-      // const navUserName = document.getElementById("navUserName");
-      // // console.log(navUserName)
-      // // console.log("USER NAME!!!!", localStorage.getItem("DFTM_USER_NAME"));
-      // navUserName.innerText = localStorage.getItem("DFTM_USER_NAME") + "!";
+        if (!res.ok) {
+          throw res;
+        }
+        form.reset();
+        console.log('hello')
+        await fetchList(userId);
+      } catch (err) {
+        handleErrors(err);
+      }
+    });
+    // displays user name on the nav ========================================
+    // const navUserName = document.getElementById("navUserName");
+    // // console.log(navUserName)
+    // // console.log("USER NAME!!!!", localStorage.getItem("DFTM_USER_NAME"));
+    // navUserName.innerText = localStorage.getItem("DFTM_USER_NAME") + "!";
 
   } catch (e) {
     console.error(e);

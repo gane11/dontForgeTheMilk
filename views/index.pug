@@ -6,6 +6,7 @@ block content
   include includes/edit-task-form
   include includes/edit-list-form
   include includes/add-list-form
+  include includes/select-list-popup
 
   div(class="grid__container")
     div(class="grid__left-col" id="")
@@ -61,17 +62,7 @@ block content
           span(class="completed-span")
         div(class="info-header") Description:
           div(class="task-description")
-      div(class="footer") © 2020 Don't Forget The Milk
-        div(class="git") 
-          a(class="github-link" href="https://github.com/gane11")
-            img(class="github-link-logo" src="images/githubicon2.jpeg")  
-            a(class="github-link" href="https://www.linkedin.com/in/aleksandar-dordevic-418a39b5/") 
-              img(class="github-link-logo" src="images/linkedinicon.png")   
-
- 
-
-
-
+      //- div(class="footer") © 2020 Don't Forget The Milk
   script(type="module" src="js/search-feature.js")
   script(type="module" src="js/tasks.js")
   script(type="module" src="js/list-summary/total-tasks.js")

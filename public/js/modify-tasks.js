@@ -3,14 +3,14 @@ document.addEventListener("DOMContentLoaded", e => {
 
   // display tasks after updating
 
-  const displayTasks = async function(task) {
+  const displayTasks = async function (task) {
 
 
     // clear old tasks
 
     let oldTaskContainer = document.getElementById("task-list-container");
     let oldTasks = document.querySelectorAll(".task-container");
-    if(oldTasks) {
+    if (oldTasks) {
       oldTasks.forEach(task => {
         oldTaskContainer.removeChild(task);
 
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", e => {
     // clear old script tags
 
     let scriptElement = document.querySelector('.script')
-    if(scriptElement) {
+    if (scriptElement) {
       oldTaskContainer.removeChild(scriptElement)
     }
 
@@ -41,36 +41,36 @@ document.addEventListener("DOMContentLoaded", e => {
       return;
     }
 
-    if(!res.ok) {
+    if (!res.ok) {
       throw res;
     }
 
     // extract tasks from the server response and dynamically generate HTML that is used to display the tasks
 
     // console.log("soemthing", await res.json())
-    const {allTasks}  = await res.json()
+    const { allTasks } = await res.json()
     let overdue = 0;
     let currentDate = new Date()
     let currentDateVals =
-    [currentDate.getFullYear(),
-      currentDate.getMonth()+1,
-    currentDate.getDate(),
-    ]
+      [currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      currentDate.getDate(),
+      ]
     // console.log(allTasks)
     document.querySelector(".total-task-span").innerHTML = allTasks.length
     allTasks.forEach(task => {
       let dueDate = task.dueDate
-      if(dueDate !== null){
+      if (dueDate !== null) {
         dueDate = dueDate.slice(0, 10).split('-')
         // console.log('due date:', dueDate)
         // console.log(currentDateVals)
-        if(currentDateVals[0] > dueDate[0]){
-          overdue +=1
+        if (currentDateVals[0] > dueDate[0]) {
+          overdue += 1
           return;
-        } else if(currentDateVals[0] == dueDate[0] && currentDateVals[1] > dueDate[1]) {
+        } else if (currentDateVals[0] == dueDate[0] && currentDateVals[1] > dueDate[1]) {
           overdue += 1
           return
-        } else if(currentDateVals[1] == dueDate[1] && currentDateVals[2] > dueDate[2]){
+        } else if (currentDateVals[1] == dueDate[1] && currentDateVals[2] > dueDate[2]) {
           overdue += 1
         }
       }
@@ -137,14 +137,14 @@ document.addEventListener("DOMContentLoaded", e => {
 
   }
 
- //---------------------------------------------------------------------------------
+  //---------------------------------------------------------------------------------
 
   // delete a task on the back-end and make a call to the function that renders the change on the front-end
 
   const deleteTask = async function (taskId) {
     let listId = localStorage.getItem("CURRENT_LIST")
 
-    const body = {taskId}
+    const body = { taskId }
 
     try {
       const res = await fetch(`/api/tasks/${taskId}/get-task`, {
@@ -161,42 +161,44 @@ document.addEventListener("DOMContentLoaded", e => {
         return;
       }
 
-      if(!res.ok) {
+      if (!res.ok) {
         throw res;
       }
 
-      const {task}  = await res.json()
+      const { task } = await res.json()
 
       let overdue = document.querySelector(".overdue-tasks-span")
       // console.log('overdue container:', overdue)
       let currentDate = new Date()
+      console.log('current date:', currentDate)
       let currentDateVals =
-      [currentDate.getFullYear(),
-        currentDate.getMonth()+1,
-      currentDate.getDate(),
-      ]
+        [currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        currentDate.getDate(),
+        ]
       let dueDate = task.dueDate
-      if(dueDate !== null){
+      console.log(dueDate)
+      if (dueDate !== null) {
         dueDate = dueDate.slice(0, 10).split('-')
         // console.log('due date:', dueDate)
         // console.log(currentDateVals)
-        if(currentDateVals[0] > dueDate[0]){
-           overdue.innerHTML -= 1
+        if (currentDateVals[0] > dueDate[0]) {
+          overdue.innerHTML -= 1
           return;
-        } else if(currentDateVals[0] == dueDate[0] && currentDateVals[1] > dueDate[1]) {
+        } else if (currentDateVals[0] == dueDate[0] && currentDateVals[1] > dueDate[1]) {
           overdue.innerHTML -= 1
           return
-        } else if(currentDateVals[1] == dueDate[1] && currentDateVals[2] > dueDate[2]){
+        } else if (currentDateVals[1] == dueDate[1] && currentDateVals[2] > dueDate[2]) {
           overdue.innerHTML -= 1
         }
       }
       // document.querySelector(".overdue-tasks-span").innerHTML = overdue;
 
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     }
 
-    try{
+    try {
       const res = await fetch(`/api/lists/${listId}/tasks/delete-task`, {
         method: 'DELETE',
         body: JSON.stringify(body),
@@ -214,11 +216,11 @@ document.addEventListener("DOMContentLoaded", e => {
         return;
       }
 
-      if(!res.ok) {
+      if (!res.ok) {
         throw res;
       }
 
-      const data  = await res.json()
+      const data = await res.json()
       // console.log(data.deletedTask)
       const deletedTask = document.querySelector(`[data-task-id="${data.deletedTask}"]`)
       deletedTask.remove()
@@ -227,7 +229,7 @@ document.addEventListener("DOMContentLoaded", e => {
       totalTasks.innerHTML -= 1
 
 
-    } catch(err) {
+    } catch (err) {
       console.error(err)
     }
 
@@ -238,10 +240,10 @@ document.addEventListener("DOMContentLoaded", e => {
   // Update tasks on the back-end and render the change on the front-end
 
   let taskId;
-  const runTaskForm = function() {
+  const runTaskForm = function () {
 
     const updateTaskForm = document.getElementById("edit-task-form")
-    updateTaskForm.addEventListener("submit", async(e) => {
+    updateTaskForm.addEventListener("submit", async (e) => {
       editTaskForm.style.display = "none"
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -249,7 +251,7 @@ document.addEventListener("DOMContentLoaded", e => {
       const formData = new FormData(updateTaskForm)
       const taskName = formData.get("taskName")
       let dueDate = formData.get("dueDate")
-      if(dueDate === "No Due Date") {
+      if (dueDate === "No Due Date") {
         dueDate = ''
       }
       const description = formData.get("description")
@@ -258,26 +260,28 @@ document.addEventListener("DOMContentLoaded", e => {
       // console.log(status)
       // console.log(typeof status)
 
-      if(status === "false") {
+      if (status === "false") {
         status = false
-      }else if (status === "true") {
+      } else if (status === "true") {
         status = true
       }
 
       const isCompleteDisplay = document.querySelector(".completed-span").innerText
-      if(status === true && isCompleteDisplay === "Incomplete") {
+      if (status === true && isCompleteDisplay === "Incomplete") {
         const completedTaskSpan = document.querySelector(".completed-tasks-span")
         let numericalCompletedTasks = Number(completedTaskSpan.innerHTML)
         completedTaskSpan.innerHTML = numericalCompletedTasks + 1
 
-      } else if(status === false && isCompleteDisplay === "Complete"){
+      } else if (status === false && isCompleteDisplay === "Complete") {
         const completedTaskSpan = document.querySelector(".completed-tasks-span")
         let numericalCompletedTasks = Number(completedTaskSpan.innerHTML)
         completedTaskSpan.innerHTML = numericalCompletedTasks - 1
       }
 
-      const body = {taskName, dueDate, description, status, taskId}
-      try{
+
+      const body = { taskName, dueDate, description, status, taskId }
+      console.log(body)
+      try {
         const res = await fetch(`api/tasks/${taskId}/update-task`, {
           method: "PUT",
           body: JSON.stringify(body),
@@ -285,9 +289,9 @@ document.addEventListener("DOMContentLoaded", e => {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem(
               "DFTM_ACCESS_TOKEN"
-              )}`,
-            }
-          })
+            )}`,
+          }
+        })
 
         //Functionality to display increment overdue tasks span if new task has a due date that has passed.
 
@@ -334,16 +338,16 @@ document.addEventListener("DOMContentLoaded", e => {
         description.innerHTML = task.description;
 
         const completionStatus = document.querySelector(".completed-span");
-        if(task.isComplete === true){
+        if (task.isComplete === true) {
           completionStatus.innerHTML = "Complete"
-        } else if(task.isComplete === false) {
+        } else if (task.isComplete === false) {
           completionStatus.innerHTML = "Incomplete"
         }
 
         await displayTasks(task)
 
 
-      }catch(err) {
+      } catch (err) {
         console.error(err)
       }
     })
@@ -357,10 +361,10 @@ document.addEventListener("DOMContentLoaded", e => {
   // console.log(tasksContainer)
 
 
-  tasksContainer.addEventListener("click", async(e)=> {
+  tasksContainer.addEventListener("click", async (e) => {
     e.preventDefault();
     e.stopImmediatePropagation();
-    if(e.target.className.startsWith('delete')) {
+    if (e.target.className.startsWith('delete')) {
       const overdueSpan = document.querySelector(".overdue-tasks-span")
       const taskId = e.target.dataset.id
       const currentTaskJson = await fetch(`./api/tasks/${taskId}`)
@@ -376,7 +380,7 @@ document.addEventListener("DOMContentLoaded", e => {
 
       // }
 
-      if(taskStatus === true ){
+      if (taskStatus === true) {
         const completedNum = Number(completedSpan.innerHTML) - 1
         completedSpan.innerHTML = completedNum
 
@@ -394,7 +398,7 @@ document.addEventListener("DOMContentLoaded", e => {
       const date = document.querySelector(".date-span")
       const taskContent = document.getElementById(taskId)
       const description = document.querySelector(".task-description")
-      if(!description.innerText || description.innerText === "THIS HOLDS THE DESCRIPTION") {
+      if (!description.innerText || description.innerText === "THIS HOLDS THE DESCRIPTION") {
         description.innerText = ''
       }
       // this adds the text from above to the update form
@@ -405,7 +409,7 @@ document.addEventListener("DOMContentLoaded", e => {
 
         document.querySelector(".descriptionField").value = description.innerText
         editTaskForm.style.display = "block"
-      },50)
+      }, 50)
 
       runTaskForm()
     }

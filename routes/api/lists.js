@@ -1,19 +1,19 @@
 const express = require('express');
-const {check} = require('express-validator');
-const {handleValidationErrors, asyncHandler} = require('../utils');
+const { check } = require('express-validator');
+const { handleValidationErrors, asyncHandler } = require('../utils');
 // const {requireAuth} = require('../../auth');
 const router = express.Router();
 const db = require('../../db/models');
 
-const { User, List, Task} = db;
+const { User, List, Task } = db;
 
 const validateList = [
   check('listName')
-  .exists({checkFalsy: true})
-  .withMessage("List name can't be undefined."),
+    .exists({ checkFalsy: true })
+    .withMessage("List name can't be undefined."),
   check('listName')
-  .isLength({max: 50})
-  .withMessage("List can't be longet than 50 characters."),
+    .isLength({ max: 50 })
+    .withMessage("List can't be longet than 50 characters."),
   handleValidationErrors,
 ];
 
@@ -32,10 +32,10 @@ router.get('/:id(\\d+)', asyncHandler(async (req, res) => {
     where: {
       id: listId,
     },
-    include: [{model:Task, as:"task"}]
+    include: [{ model: Task, as: "task" }]
   })
-  if(list) {
-    res.json({list})
+  if (list) {
+    res.json({ list })
   } else {
     next(taskNotFoundError(taskId))
   }
@@ -64,16 +64,16 @@ router.put('/:id(\\d+)', asyncHandler(async (req, res, next) => {
 
 
 
-router.delete('/:id(\\d+)', asyncHandler(async(req,res,next) => {
+router.delete('/:id(\\d+)', asyncHandler(async (req, res, next) => {
   const list = await List.findOne({
     where: {
       id: req.params.id
     }
   });
 
-  if(list) {
+  if (list) {
     await list.destroy();
-    res.json({message:`Deleted list with id of ${req.params.id}!`});
+    res.json({ message: `Deleted list with id of ${req.params.id}!` });
   } else {
     next(listNotFoundError(req.params.id));
   }
@@ -89,28 +89,30 @@ router.get('/:listId/tasks', asyncHandler(async (req, res) => {
     }
   })
   allTasks.forEach(task => {
-    if(task.isComplete === true){
+    if (task.isComplete === true) {
       count++
     }
   })
-  res.json({allTasks, count})
+  res.json({ allTasks, count })
 }))
 
 
 
 // create a new task and store it in the database
-router.post('/:id/tasks/create-task', asyncHandler( async (req, res) => {
+router.post('/:id/tasks/create-task', asyncHandler(async (req, res) => {
 
   const { newTask, listId } = req.body;
+
   const task = await Task.create({
     taskName: newTask,
     listId: listId
   })
   // console.log(task)
   res.json({ task })
+
 }))
 
-router.get('/:id/tasks/completedTasks', asyncHandler(async ( req, res, next) => {
+router.get('/:id/tasks/completedTasks', asyncHandler(async (req, res, next) => {
   const listId = req.params.id
   const allTasks = await Task.findAll({
     where: {
@@ -121,15 +123,15 @@ router.get('/:id/tasks/completedTasks', asyncHandler(async ( req, res, next) => 
   let completeTasks = []
   // console.log(allLists.task)
   allTasks.forEach(task => {
-    if(task.isComplete === true){
+    if (task.isComplete === true) {
       completeTasks.push(task)
     }
   })
-  res.json({completeTasks})
+  res.json({ completeTasks })
 }))
 
 
-router.get('/:id/tasks/incompletedTasks', asyncHandler(async ( req, res, next) => {
+router.get('/:id/tasks/incompletedTasks', asyncHandler(async (req, res, next) => {
   const listId = req.params.id
   const allTasks = await Task.findAll({
     where: {
@@ -140,11 +142,11 @@ router.get('/:id/tasks/incompletedTasks', asyncHandler(async ( req, res, next) =
   let incompleteTasks = []
   // console.log(allLists.task)
   allTasks.forEach(task => {
-    if(task.isComplete === false){
+    if (task.isComplete === false) {
       incompleteTasks.push(task)
     }
   })
-  res.json({incompleteTasks})
+  res.json({ incompleteTasks })
 }))
 
-  module.exports = router;
+module.exports = router;

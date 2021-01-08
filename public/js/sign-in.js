@@ -1,5 +1,5 @@
-
 import { errorNotifications } from "./error-notifications.js";
+
 document.addEventListener("DOMContentLoaded", async (event) => {
   try {
     const res = await fetch("https://type.fit/api/quotes")
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     const password = formData.get("password");
     const body = { email, password };
     try {
-      const res = await fetch ("/api/users/token", {
+      const res = await fetch("/api/users/token", {
         method: "POST",
         body: JSON.stringify(body),
         headers: { "Content-Type": "application/json" }

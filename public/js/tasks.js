@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', e => {
-  if(localStorage.getItem('CURRENT_LIST')) {
+  if (localStorage.getItem('CURRENT_LIST')) {
     localStorage.removeItem('CURRENT_LIST')
   }
 
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', e => {
   const lists = document.querySelectorAll('.list-cat-container');
 
   lists.forEach(list => {
-    list.addEventListener('click', async(e) => {
+    list.addEventListener('click', async (e) => {
       e.stopImmediatePropagation();
 
 
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', e => {
 
         let oldTaskContainer = document.getElementById("task-list-container");
         let oldTasks = document.querySelectorAll(".task-container");
-        if(oldTasks) {
+        if (oldTasks) {
           oldTasks.forEach(task => {
             oldTaskContainer.removeChild(task);
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', e => {
         // clear old script tags
 
         let scriptElement = document.querySelector('.script')
-        if(scriptElement) {
+        if (scriptElement) {
           oldTaskContainer.removeChild(scriptElement)
         }
 
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', e => {
           return;
         }
 
-        if(!res.ok) {
+        if (!res.ok) {
           throw res;
         }
 
@@ -74,38 +74,44 @@ document.addEventListener('DOMContentLoaded', e => {
         // extract tasks from the server response and dynamically generate HTML that is used to display the tasks
 
 
-        const {allTasks, count}  = await res.json()
+        const { allTasks, count } = await res.json()
 
+        const totalTaskSpan = document.querySelector(".total-task-span")
+        totalTaskSpan.innerHTML = allTasks.length
         const completedTasksSpan = document.querySelector(".completed-tasks-span")
         completedTasksSpan.innerHTML = count
 
         let overdue = 0;
         let currentDate = new Date()
         let currentDateVals =
-        [currentDate.getFullYear(),
-          currentDate.getMonth()+1,
-        currentDate.getDate(),
-        ]
+          [
+            currentDate.getFullYear(),
+            currentDate.getMonth() + 1,
+            currentDate.getDate(),
+          ]
         // console.log(allTasks)
-        document.querySelector(".total-task-span").innerHTML = allTasks.length
+        // document.querySelector(".total-task-span").innerHTML = allTasks.length
         allTasks.forEach(task => {
           let dueDate = task.dueDate
-          if(dueDate !== null){
+          if (dueDate !== null) {
             dueDate = dueDate.slice(0, 10).split('-')
             // console.log('due date:', dueDate)
             // console.log(currentDateVals)
-            if(currentDateVals[0] > dueDate[0]){
-              overdue +=1
+            if (currentDateVals[0] > dueDate[0]) {
+              console.log('first')
+              overdue += 1
               return;
-            } else if(currentDateVals[0] == dueDate[0] && currentDateVals[1] > dueDate[1]) {
+            } else if (currentDateVals[0] == dueDate[0] && currentDateVals[1] > dueDate[1]) {
+              console.log('second')
               overdue += 1
               return
-            } else if(currentDateVals[1] == dueDate[1] && currentDateVals[2] > dueDate[2]){
+            } else if (currentDateVals[1] == dueDate[1] && currentDateVals[2] > dueDate[2]) {
+              console.log('third')
               overdue += 1
             }
           }
         })
-
+        console.log('hello')
         document.querySelector(".overdue-tasks-span").innerHTML = overdue;
 
         const taskListContainer = document.querySelector(".task-list-container")
@@ -168,7 +174,7 @@ document.addEventListener('DOMContentLoaded', e => {
 
         // deal with any errors that arise
 
-      } catch(err) {
+      } catch (err) {
         // handleErrors(err)
         console.error(err)
       }

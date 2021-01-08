@@ -51,20 +51,17 @@ app.use('/api/tasks', displayTasks);
 // app.use("/api/tasks", tasksRouter);
 
 
-
-
-
 // unhandled requests
-  app.use((req, res, next) => {
-    const error = new Error("Resource could not be found.");
-    error.errors = ["Resource could not be found."];
-    error.status = 404;
-    res.render("404page");  //create 404 add button to go to home
-  });
+app.use((req, res, next) => {
+  const error = new Error("Resource could not be found.");
+  error.errors = ["Resource could not be found."];
+  error.status = 404;
+  res.render("404page");  //create 404 add button to go to home
+});
 
 //sequelize errors
 app.use((error, req, res, next) => {
-  if(error instanceof ValidationError) {
+  if (error instanceof ValidationError) {
     error.errors = error.errors.map((err) => err.message);
     error.title = "Sequelize Error";
   };
