@@ -19,12 +19,9 @@ Check out the app: 	🐮 <a href="https://where-is-the-milk.herokuapp.com/sign-i
 ###  🍼 Instruction
 
 1. Clone the repository.
-2. Run `pipenv install` on the terminal from the root directory.
-3. Run `pipenv run flask run` to start up the backend server.
-4. Open a new terminal, and navigate to react-app directory from the root directory with `cd react-app`.
-5. Run `npm install` to install all frontend dependencies.
-6. Run `npm start` to start up the app.
-7. Access http://localhost:3000/.
+2. Run `npm install` to install all frontend dependencies.
+3. Run `npm start` to start up the app.
+4. Access http://localhost:3000/.
 
 ### 🍀  Documentation
 
