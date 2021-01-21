@@ -38,6 +38,7 @@ input:focus {
 /* ========================================================================== */
 
 .header-nav__container {
+  height: 4rem;
   background-color: #2060BF;
   display: flex;
   color: white;
@@ -46,8 +47,22 @@ input:focus {
 }
 
 .logo-nav {
-  width: 45px;
-  height: auto;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.linkedin-logo {
+  padding-top: 0.5rem;
+    width: 3.5rem;
+  height: 3.5rem;
+  margin-left: 10rem;
+}
+
+.github-logo {
+   padding-top: 0.5rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-right: 10rem;
 }
 
 .logo-dftm {
@@ -70,8 +85,8 @@ input:focus {
   font-size: 16px;
   border: none;
   border-radius: 3px;
-  width: 300px;
-  height: 30px;
+  width: 20rem;
+  height: 2rem;
   background-color: #3D79C9;
   color: white;
   padding-left: 10px;
@@ -576,6 +591,7 @@ form.add-task-form{
 /* RIGHT COLUMN ================================================================= */
 
 .grid__right-col {
+  border-radius: 0.7rem;
   font-size: 14px;
   grid-area: right-col;
   background-color: #E4EEF8;
